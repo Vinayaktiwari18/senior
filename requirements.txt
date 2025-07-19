@@ -8,3 +8,4 @@ whisper
 ffmpeg-python
 google-cloud-speech
 speechrecognition
+moviepy

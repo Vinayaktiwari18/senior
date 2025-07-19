@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+edge-tts
+openai
+whisper
+ffmpeg-python
+google-cloud-speech

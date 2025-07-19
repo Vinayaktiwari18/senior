@@ -10,3 +10,4 @@ google-cloud-speech
 speechrecognition
 moviepy
 langdetect==1.0.9
+python-multipart

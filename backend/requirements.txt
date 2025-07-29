@@ -10,3 +10,8 @@ requests
 aiohttp
 srt
 pydantic
+imageio
+imageio-ffmpeg
+decorator
+tqdm
+numpy

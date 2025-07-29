@@ -6,3 +6,7 @@ moviepy
 openai
 python-dotenv
 langdetect
+requests
+aiohttp
+srt
+pydantic

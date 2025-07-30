@@ -14,3 +14,4 @@ pillow
 tabulate
 decorator
 cachetools
+python-multipart

@@ -2,22 +2,21 @@ import requests
 import os
 
 def get_ai_reply(user_input: str, system_prompt: str = "") -> str:
-    # Load API key from environment variable
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         print("❌ API key is missing.")
         return "❌ No API key found in environment."
 
-    # Headers required by OpenRouter
     headers = {
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "http://localhost",  # Use your deployed domain in production
+        "HTTP-Referer": "http://localhost",  # Replace with your deployed frontend URL if needed
         "Content-Type": "application/json"
     }
 
-    # Construct the message payload
     data = {
-        "model": "mistralai/mistral-7b-instruct",
+        "model": "mistralai/mistral-7b-instruct",  # ✅ You can change this to claude-3-haiku or gpt-3.5-turbo for faster replies
+        "max_tokens": 50,  # ✅ Limit reply length (adjust 50–200 as needed)
+        "temperature": 0.7,  # Optional: controls creativity
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_input}
@@ -29,21 +28,17 @@ def get_ai_reply(user_input: str, system_prompt: str = "") -> str:
             "https://openrouter.ai/api/v1/chat/completions",
             headers=headers,
             json=data,
-            timeout=15  # ⏰ Add timeout so it doesn’t hang forever
+            timeout=15
         )
 
-        # ✅ Success: extract and return AI message
         if response.status_code == 200:
             json_data = response.json()
             message = json_data.get("choices", [{}])[0].get("message", {}).get("content")
-            return message if message else "🤖 No reply received from the AI."
+            return message.strip() if message else "🤖 AI replied with nothing."
 
-        # ❌ API returned error
-        print("🔴 OpenRouter API Error:")
-        print("Status Code:", response.status_code)
-        print("Response:", response.text)
-        return f"❌ OpenRouter error {response.status_code}. Try again later."
+        print("🔴 OpenRouter API Error:", response.status_code, response.text)
+        return f"❌ AI Error: {response.status_code}"
 
     except requests.exceptions.RequestException as e:
-        print("❌ Network or request error:", str(e))
-        return "❌ Couldn't reach AI service. Check your internet or try again later."
+        print("❌ Request Error:", str(e))
+        return "❌ Couldn’t reach AI service. Try again later."
